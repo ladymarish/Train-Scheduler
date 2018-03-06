@@ -27,6 +27,7 @@ th {
 
 .jumbotron h3 {
 	margin-top: 5px;
+	font-size:25px;
 	color:#838383;
 	font-style: italic;
 }
@@ -75,6 +76,8 @@ label {
 	margin-top: 5px;
 	font-weight: 500;
 }
+
+input {font-family: "Helvetica", sans-serif}
 
 .form-control {
 	background-color: black;

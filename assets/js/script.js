@@ -31,19 +31,13 @@ $("#submit").on("click", function (event) {
   frequency = $("#frequency-input").val().trim();
 
 
-  var firstTimeConverted = moment(time, "hh:mm").subtract(1, "years");
-
-  var currentTime = moment();
-
-  var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
-
+  var firstTimeConverted = moment(time, "HH:mm").subtract(1, "years");
+  //console.log(firstTimeConverted.format("HH:mm"));
+  //var currentTime = moment();
+  var diffTime = moment().diff(firstTimeConverted, "minutes");
   var remainder = diffTime % frequency;
-
-  var tMinutesTillTrain = frequency - remainder;
-
-  var nextTrain = moment().add(tMinutesTillTrain, "minutes");
-
-
+  var minsaway = frequency - remainder;
+  var nextTrain = moment().add(minsaway, "minutes");
 
   // Push to the database
   database.ref().push({
@@ -51,7 +45,8 @@ $("#submit").on("click", function (event) {
     destination: destination,
     time: time,
     frequency: frequency,
-    minutes_away: nextTrain,
+    minaway: JSON.stringify(minsaway),
+    //minaway: minsaway,
     dateAdded: firebase.database.ServerValue.TIMESTAMP
   });
 
@@ -62,6 +57,6 @@ $("#submit").on("click", function (event) {
   $("#frequency-input").val("");
 
   // Populating the table columns
-  $(".table > tbody").append("<tr><td>" + name + "</td><td>" + destination + "</td><td>" + time + "</td><td>" + frequency + "</td><td>" + nextTrain + "</td></tr>");
+  $(".table > tbody").append("<tr><td>" + name + "</td><td>" + destination + "</td><td>" + time + "</td><td>" + frequency + "</td><td>" + minsaway + "</td></tr>");
 
 });
