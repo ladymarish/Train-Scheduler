@@ -55,7 +55,7 @@ $("#submit").on("click", function (event) {
   var remainder = diffTime % frequency;
   var minsaway = frequency - remainder;
   var nextTrain = moment().add(minsaway, "minutes");
-  var arrivalTime = moment(nextTrain).format("hh:mm")
+  var arrivalTime = moment(nextTrain).format("HH:mm");
 
   // Push to the database
   database.ref().push({
