@@ -9,45 +9,23 @@ var config = {
   storageBucket: "train-scheduler-a3cf4.appspot.com",
   messagingSenderId: "1084749362911"
 };
+
 firebase.initializeApp(config);
 
 var database = firebase.database();
 
-// Initial Values
-var name = "";
-var destination = "";
-//var time = moment();
-var time = "";
-var frequency = "";
-var minsaway = "";
-
-var firstTimeConverted = moment(time, "HH:mm").subtract(1, "years");
-var currentTime = moment();
-var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
-var remainder = diffTime % frequency;
-var minsaway = frequency - remainder;
-var nextTrain = moment().add(minsaway, "minutes");
-var arrivalTime = moment(nextTrain).format("hh:mm")
-
-/* $(".table > tbody").append("<tr><td>Long Island Rail Road</td><td>Penn Station</td><td>" + arrivalTime + "</td><td>" + frequency.val("5") + "</td><td>" + minsaway + "</td></tr>");
-$(".table > tbody").append("<tr><td>Metro-North Railroad</td><td>Harlem</td><td>" + arrivalTime + "</td><td>" + frequency + "</td><td>" + minsaway + "</td></tr>");
-$(".table > tbody").append("<tr><td>Virginia Railway Express</td><td>Virginia</td><td>" + arrivalTime + "</td><td>" + frequency + "</td><td>" + minsaway + "</td></tr>");
-$(".table > tbody").append("<tr><td>Maryland Rail Commuter Service</td><td>Maryland</td><td>" + arrivalTime + "</td><td>" + frequency + "</td><td>" + minsaway + "</td></tr>");
-$(".table > tbody").append("<tr><td>Amtrak</td><td>Raleigh</td><td>" + arrivalTime + "</td><td>" + frequency + "</td><td>" + minsaway + "</td></tr>"); */
-
 
 // On Button Click
-$("#submit").on("click", function (event) {
-
+$("#submit").on("click", function(event) {
 
   event.preventDefault();
   
-
   // User Input
-  name = $("#name-input").val().trim();
-  destination = $("#destination-input").val().trim();
-  time = $("#time-input").val().trim();
-  frequency = $("#frequency-input").val().trim();
+  var name = $("#name-input").val().trim();
+  var destination = $("#destination-input").val().trim();
+  var time = $("#time-input").val().trim();
+  var frequency = $("#frequency-input").val().trim();
+
 
   var firstTimeConverted = moment(time, "HH:mm").subtract(1, "years");
   var currentTime = moment().format('HH:mm');
@@ -61,11 +39,10 @@ $("#submit").on("click", function (event) {
   database.ref().push({
     name: name,
     destination: destination,
-    time: time,
+    time: arrivalTime,
     frequency: frequency,
     minaway: JSON.stringify(minsaway),
-    //minaway: minsaway,
-    dateAdded: firebase.database.ServerValue.TIMESTAMP
+    //dateAdded: firebase.database.ServerValue.TIMESTAMP
   });
 
   // Clear the form values
@@ -73,9 +50,31 @@ $("#submit").on("click", function (event) {
   $("#destination-input").val("");
   $("#time-input").val("");
   $("#frequency-input").val("");
+});
+
+  // Saves the user entries
+  database.ref().on("child_added", function(childSnapshot, prevChildKey) {
+
+  console.log(childSnapshot.val());
+
+  // Store everything into a variable.
+  var userName = childSnapshot.val().name;
+  var userDestination = childSnapshot.val().destination;
+  var userFirstTime = childSnapshot.val().time;
+  var userFrequency = childSnapshot.val().frequency;
+  var userMinsAway = childSnapshot.val().minaway;
+
+
+  // Check entries
+  console.log(userName);
+  console.log(userDestination);
+  console.log(userFirstTime);
+  console.log(userFrequency);
+  console.log(userMinsAway);
+
 
   // Populating the table columns
-  $(".table > tbody").append("<tr><td>" + name + "</td><td>" + destination + "</td><td>" + arrivalTime + "</td><td>" + frequency + "</td><td>" + minsaway + "</td></tr>");
+  $(".table > tbody").append("<tr><td>" + userName + "</td><td>" + userDestination + "</td><td>" + userFirstTime + "</td><td>" + userFrequency + "</td><td>" + userMinsAway + "</td></tr>");
 
 });
 });
